@@ -66,6 +66,7 @@ public class task {
             // 当前
             BigDecimal valueDec = new BigDecimal(value).setScale(10);
             // 差值
+
             BigDecimal subtract = (lastDec.subtract(valueDec)).setScale(10);
             // 差值*100 / 最新值
             BigDecimal divide = ((subtract.multiply(new BigDecimal("100"))).divide(lastDec, 10, BigDecimal.ROUND_HALF_UP)).abs();
