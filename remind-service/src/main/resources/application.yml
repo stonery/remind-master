@@ -10,7 +10,10 @@ spring:
       maxTotal:
       maxWaitMillis: 5000
   datasource:
-    url: jdbc:mysql://106.14.164.102:3306/remind
+    url: jdbc:mysql://106.14.164.102:3306/mind?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.remind.mapper
