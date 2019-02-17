@@ -1,12 +1,11 @@
 package com.remind.task;
 
-import com.remind.domain.CoinXpath;
-import com.remind.domain.CoinXpathExample;
-import com.remind.domain.UserMind;
 import com.remind.mail.Mail;
 import com.remind.mail.MailUtil;
-import com.remind.mapper.CoinXpathMapper;
-import com.remind.mapper.UserMindMapper;
+import com.remind.persistence.domain.CoinXpath;
+import com.remind.persistence.domain.UserMind;
+import com.remind.persistence.manager.CoinXpathManager;
+import com.remind.persistence.manager.UserMindManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,6 +14,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,10 +23,10 @@ import java.util.List;
 @Component
 public class task {
     @Autowired
-    UserMindMapper userMindMapper;
+    UserMindManager userMindManager;
 
     @Autowired
-    CoinXpathMapper coinXpathMapper;
+    CoinXpathManager coinXpathManager;
 
     @Autowired
     RedisTemplate<String,String> redisTemplate;
@@ -35,7 +35,7 @@ public class task {
     @Scheduled(cron = "0,10,20,30,40,50 * * * * ?")
     public void cronJob() {
         long l = System.currentTimeMillis();
-        UserMind userMind = userMindMapper.selectByPrimaryKey(1);
+        UserMind userMind = userMindManager.selectByPrimaryKey(1L);
         Integer percent = userMind.getPercent();
 
         System.out.println(new Date().toLocaleString());
@@ -43,9 +43,9 @@ public class task {
         SetOperations<String, String> opsForSet = redisTemplate.opsForSet();
         ListOperations<String, String> opsForList = redisTemplate.opsForList();
 
-        CoinXpathExample coinXpathExample = new CoinXpathExample();
-        coinXpathExample.createCriteria().andCoinIdEqualTo(1);
-        List<CoinXpath> coinXpaths = coinXpathMapper.selectByExample(coinXpathExample);
+        Example coinXpathExample = new Example(CoinXpath.class);
+        coinXpathExample.createCriteria().andEqualTo("isDelete",1);
+        List<CoinXpath> coinXpaths = coinXpathManager.selectCoinXpathByExample(coinXpathExample);
         for (CoinXpath coinXpath : coinXpaths) {
             String listDayKey = "id_"+coinXpath.getId()+"class_"+coinXpath.getCss()+"DAY";
             String listHOURKey = "id_"+coinXpath.getId()+"class_"+coinXpath.getCss()+"HOUR";

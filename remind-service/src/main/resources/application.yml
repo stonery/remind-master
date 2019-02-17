@@ -14,6 +14,13 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
+
 mybatis:
-  mapper-locations: classpath*:mapper/*.xml
-  type-aliases-package: com.remind.mapper
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.remind.persistence.mapper
+
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
