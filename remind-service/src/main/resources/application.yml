@@ -1,20 +1,19 @@
 server:
   port: 8081
+project:
+  artifactId: remind
 spring:
   redis:
     cache:
-      host: 106.14.164.102:6379
-      password: 123456
       maxIdle:
       minIdle:
       maxTotal:
       maxWaitMillis: 5000
   datasource:
-    url: jdbc:mysql://106.14.164.102:3306/mind?useUnicode=true&characterEncoding=utf-8&useSSL=false
-    username: root
-    password: 123456
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
     driver-class-name: com.mysql.jdbc.Driver
-
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.remind.persistence.mapper
@@ -24,3 +23,7 @@ pagehelper:
   reasonable: true
   supportMethodsArguments: true
   params: count=countSql
+
+logging:
+  config: classpath:logback-spring.xml
+  path: G:/home/admin
